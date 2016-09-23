@@ -1,23 +1,22 @@
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 
 /**
  * Sintatico1 - Classe para implementação da versão 1 do Analisador Sintático
  *
- * @author Turma de compiladores de 2/2015
- * @author Ricardo Ferreira de Oliveira
  *
- * Gram�tica:
+ * Gramática:
  *
  * <p>              ::= 'ENTREVERO' <declvariaveis> 'PARTIU' <comandos> 'DEITOU' 'O' 'CABELO'
  * <declvariaveis>  ::= <declvariavel> '@' <declvariaveis>
@@ -55,11 +54,11 @@ import javax.swing.filechooser.FileFilter;
  *                  |   <termo>
  * <termo>          ::= <termo> '*' <exponencial>
  *                  |   <termo> '/' <exponencial>
- *                  |   <termo> '�' <exponencial> // mmc dos operandos
+ *                  |   <termo> '?' <exponencial> // mmc dos operandos
  *                  |   <exponencial>
  * <exponencial>    ::= <exponencial> ** <fatorial>
  *                  |   <fatorial>
- * <fatorial>       ::= '[' <fator> ']''!'
+ * <fatorial>       ::= '[' <fatorial> ']''!'
  *                  |   <fator>
  * <fator>          ::= '(' <expressao> ')'
  *                  |   <variavel>
@@ -159,7 +158,7 @@ public class gauLexico {
             linhaFonte     = "";
             token          = T_NULO;
             estadoCompilacao 	= E_SEM_ERROS;
-            mensagemDeErro = "Sem erros de Compila��o";
+            mensagemDeErro = "Sem erros de Compilação";
             tokensIdentificados.append( "Tokens reconhecidos: \n\n" );
             regrasReconhecidas.append( "\n\nRegras reconhecidas: \n\n" );
 
@@ -191,11 +190,11 @@ public class gauLexico {
         p();
 
         if ( estadoCompilacao == E_ERRO_LEXICO ) {
-            JOptionPane.showMessageDialog( null, mensagemDeErro, "Erro L�xico!", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( null, mensagemDeErro, "Erro Léxico!", JOptionPane.ERROR_MESSAGE );
         } else if ( estadoCompilacao == E_ERRO_SINTATICO ) {
-            JOptionPane.showMessageDialog( null, mensagemDeErro, "Erro Sint�tico!", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( null, mensagemDeErro, "Erro Sintático!", JOptionPane.ERROR_MESSAGE );
         } else {
-            JOptionPane.showMessageDialog( null, "An�lise Sint�tica terminada sem erros", "An�lise Sint�tica terminada!", JOptionPane.INFORMATION_MESSAGE );
+            JOptionPane.showMessageDialog( null, "Análise Sintática terminada sem erros", "Análise Sintática terminada!", JOptionPane.INFORMATION_MESSAGE );
         }
     }
 
@@ -219,19 +218,19 @@ public class gauLexico {
                             buscaProximoToken();
                             acumulaRegra( "<p> ::= 'ENTREVERO' <declvariaveis> 'PARTIU' <comandos> 'DEITOU' 'O' 'CABELO'");
                         } else {
-                            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nCABELO esperado, mas me surge: " + lexema );
+                            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nCABELO esperado, mas me surge: " + lexema );
                         }
                     } else {
-                        registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO esperado, mas o guasca me vem com: " + lexema );
+                        registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO esperado, mas o guasca me vem com: " + lexema );
                     }
                 } else {
-                    registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nDEITOU esperado, mas o pi� se fresqueia e vem com: " + lexema );
+                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nDEITOU esperado, mas o piá se fresqueia e vem com: " + lexema );
                 }
             } else {
-                registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPARTIU esperado, mas o vivente me aparece com: " + lexema );
+                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPARTIU esperado, mas o vivente me aparece com: " + lexema );
             }
         } else {
-            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nENTREVERO esperado, mas o vivente me vem com: " + lexema );
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nENTREVERO esperado, mas o vivente me vem com: " + lexema );
         }
     }
 
@@ -266,7 +265,7 @@ public class gauLexico {
         } else if ( token == T_EXTRINGUE ) {
             buscaProximoToken();
         } else {
-            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTe decide vivente: ou NUMERICO ou EXTRINGUE! sem estas pilchas o vivente vai ser expulso do CTG! " + lexema );
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTe decide vivente: ou NUMERICO ou EXTRINGUE! sem estas pilchas o vivente vai ser expulso do CTG! " + lexema );
         }
     }
 
@@ -297,7 +296,7 @@ public class gauLexico {
                 comandos();
             }
         } else {
-            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPILA esperado, mas o vivente esta submisso aos inter�sses internacionais: " + lexema );
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPILA esperado, mas o vivente esta submisso aos interésses internacionais: " + lexema );
         }
 
 
@@ -311,6 +310,14 @@ public class gauLexico {
         }
     }
 
+    /**
+     * <comando>        ::= <cmdleitura>
+     *                  |   <cmdescrita>
+     *                  |   <cmdse>
+     *                  |   <cmdenquanto>
+     *                  |   <cmdpara>
+     *                  |   <cmdatrbuicao>
+     */
     static void comando() {
 
         switch ( token ) {
@@ -318,6 +325,74 @@ public class gauLexico {
             case T_TROVA: comandoEscrita(); break;
             case T_SE: comandoSe(); break;
             case T_ENQUANTO: comandoEnquanto(); break;
+            case T_POE: comandoAtribuicao(); break;
+            case T_PARA: comandoPara(); break;
+        }
+    }
+
+    /**
+     * <cmdatribuicao>  ::= 'POE' <expressao> 'NO' 'BOLICHO' <variavel>
+     */
+    static void comandoAtribuicao() {
+        if ( token == T_POE ) {
+            buscaProximoToken();
+            expressao();
+            if ( token == T_NO ) {
+                buscaProximoToken();
+                if ( token == T_BOLICHO ) {
+                    buscaProximoToken();
+                    variavel();
+                } else {
+                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTI esperado, mas a bagualada estava de boa: " + lexema );
+                }
+            } else {
+                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPRA esperado, mas a bagualada estava de boa: " + lexema );
+            }
+        } else {
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPOE esperado, mas a bagualada estava de boa: " + lexema );
+        }
+    }
+
+    /**
+     * <cmdpara>        ::= 'PARA' <variavel> 'DE' <expressao> 'ATE' <expressao> 'PELEIA' <comandos> 'DEU' 'PRA' 'TI'
+     */
+    static void comandoPara() {
+        if ( token == T_PARA ) {
+            buscaProximoToken();
+            variavel();
+            if ( token == T_DE ) {
+                buscaProximoToken();
+                expressao();
+                if ( token == T_ATE ) {
+                    buscaProximoToken();
+                    expressao();
+                    if ( token == T_PELEIA ) {
+                        buscaProximoToken();
+                        comandos();
+                        if ( token == T_DEU ) {
+                            buscaProximoToken();
+                            if ( token == T_PRA ) {
+                                buscaProximoToken();
+                                if ( token == T_TI ) {
+                                    buscaProximoToken();
+                                } else {
+                                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTI esperado, mas a bagualada estava de boa: " + lexema );
+                                }
+                            } else {
+                                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPRA esperado, mas a bagualada estava de boa: " + lexema );
+                            }
+                        } else {
+                            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nDEU esperado, mas a bagualada estava de boa: " + lexema );
+                        }
+                    } else {
+                        registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPELEIA esperada, mas a bagualada estava de boa: " + lexema );
+                    }
+                } else {
+                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nATE esperada, mas a bagualada estava de boa: " + lexema );
+                }
+            } else {
+                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nDE esperada, mas a bagualada estava de boa: " + lexema );
+            }
         }
     }
 
@@ -335,13 +410,13 @@ public class gauLexico {
                 if ( token == T_VAZA ) {
                     buscaProximoToken();
                 } else {
-                    registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nVAZA esperado, mas o bagual se passou e escreveu: " + lexema );
+                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nVAZA esperado, mas o bagual se passou e escreveu: " + lexema );
                 }
             } else {
-                registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nENTON esperado, mas o bagual se passou e escreveu: " + lexema );
+                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nENTON esperado, mas o bagual se passou e escreveu: " + lexema );
             }
         } else {
-            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nSE esperado, mas o bagual se passou e escreveu: " + lexema );
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nSE esperado, mas o bagual se passou e escreveu: " + lexema );
         }
     }
 
@@ -373,41 +448,17 @@ public class gauLexico {
                         if ( token == T_TI ) {
                             buscaProximoToken();
                         } else {
-                            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTI esperado, mas a bagualada estava de boa: " + lexema );
+                            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTI esperado, mas a bagualada estava de boa: " + lexema );
                         }
                     } else {
-                        registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPRA esperado, mas a bagualada estava de boa: " + lexema );
+                        registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPRA esperado, mas a bagualada estava de boa: " + lexema );
                     }
                 } else {
-                    registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nDEU esperado, mas a bagualada estava de boa: " + lexema );
+                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nDEU esperado, mas a bagualada estava de boa: " + lexema );
                 }
             } else {
-                registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPELEIA esperada, mas a bagualada estava de boa: " + lexema );
+                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPELEIA esperada, mas a bagualada estava de boa: " + lexema );
             }
-        }
-    }
-    /**
-    * <cmdatribuicao>  ::= 'POE' <expressao> 'NO' 'BOLICHO' <variavel>
-    */
-    static void comandoAtribuicao(){
-        if (token == T_POE){
-            buscaProximoToken();
-            expressao();
-            acumulaRegra( "<cmdatribuicao>     ::= 'POE' <expressao>");
-            if (token == T_NO){
-                buscaProximoToken();
-                if (token == T_BOLICHO){
-                    buscaProximoToken();
-                    variavel();
-                    acumulaRegra( "<cmdatribuicao>     ::= 'NO' 'BOLICHO' <variavel>");
-                } else {
-                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nBolicho esperado, mas o guasca me vem com: " + lexema );
-                }
-            } else {
-                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nNO esperado, mas o guasca me vem com: " + lexema );
-            }
-        } else {
-            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nPOE esperado, mas o guasca me vem com: " + lexema );
         }
     }
 
@@ -425,13 +476,13 @@ public class gauLexico {
                     variavel();
                     acumulaRegra( "<cmdleitura> ::= 'FALA' 'TCHE' 'O' <variavel>");
                 } else {
-                    registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO esperado, mas o guasca me vem com: " + lexema );
+                    registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO esperado, mas o guasca me vem com: " + lexema );
                 }
             } else {
-                registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTCHE esperado, mas bah me aparece: " + lexema );
+                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTCHE esperado, mas bah me aparece: " + lexema );
             }
         } else {
-            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nFALA esperado, mas o bagual se passou e escreveu: " + lexema );
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nFALA esperado, mas o bagual se passou e escreveu: " + lexema );
         }
     }
 
@@ -444,7 +495,7 @@ public class gauLexico {
             expressao();
             acumulaRegra( "<cmdescrita>     ::= 'TROVA' <expressao>");
         } else {
-            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTROVA esperado, mas o guasca me vem com: " + lexema );
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nTROVA esperado, mas o guasca me vem com: " + lexema );
         }
     }
 
@@ -477,7 +528,7 @@ public class gauLexico {
             buscaProximoToken();
             expressao();
         } else {
-            registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO bagual tem que compar�. N�o me sai com: " + lexema );
+            registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO bagual tem que compará. Não me sai com: " + lexema );
         }
     }
 
@@ -564,7 +615,7 @@ public class gauLexico {
                 buscaProximoToken();
                 acumulaRegra( "<fator> ::= '(' <expressao> ')'");
             } else {
-                registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO vivente n�o fecha os parentesis: " + lexema );
+                registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nO vivente não fecha os parentesis: " + lexema );
             }
         } else if ( token == T_NUMERO ) {
             numero();
@@ -612,22 +663,22 @@ public class gauLexico {
 //								  buscaProximoToken();
 //								  acumulaRegra( "<comando_sendo>    ::= 'SENDO' '(' <cond> ')' '[' <comandos> ']' <ousendos> <naosendo> 'FIMSENDO'" );
 //							  }  else {
-//								  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
+//								  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
 //							  }
 //						  }  else {
-//							  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
+//							  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
 //						  }
 //					  }  else {
-//						  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
+//						  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
 //					  }
 //				  }  else {
-//					  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\')' esperado, mas encontrei: " + lexema );
+//					  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\')' esperado, mas encontrei: " + lexema );
 //				  }
 //			  }  else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'(' esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'(' esperado, mas encontrei: " + lexema );
 //			  }
 //		  }  else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'SENDO' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'SENDO' esperado, mas encontrei: " + lexema );
 //	  }
 //   }
 
@@ -660,19 +711,19 @@ public class gauLexico {
 //						  buscaProximoToken();
 //						  acumulaRegra( "<comando_enquanto> ::= 'ENQUANTO' '(' <cond> ')' '[' <comandos> ']'");
 //					  }  else {
-//						  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
+//						  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
 //					  }
 //				  }  else {
-//					  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
+//					  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
 //				  }
 //			  }  else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\')' esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\')' esperado, mas encontrei: " + lexema );
 //			  }
 //		  }  else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'(' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'(' esperado, mas encontrei: " + lexema );
 //		  }
 //	  }  else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'OUSENDO' esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'OUSENDO' esperado, mas encontrei: " + lexema );
 //	  }
 //  }
 
@@ -690,10 +741,10 @@ public class gauLexico {
 //				  buscaProximoToken();
 //				  acumulaRegra( "<naosendo>         ::= 'NAOSENDO' '[' <comandos> ']'");
 //			  }  else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
 //			  }
 //		  }  else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
 //		  }
 //
 //	  } else {
@@ -720,19 +771,19 @@ public class gauLexico {
 //						  buscaProximoToken();
 //						  acumulaRegra( "<comando_enquanto> ::= 'ENQUANTO' '(' <cond> ')' '[' <comandos> ']'");
 //					  }  else {
-//						  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
+//						  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
 //					  }
 //				  }  else {
-//					  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
+//					  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
 //				  }
 //			  }  else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\')' esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\')' esperado, mas encontrei: " + lexema );
 //			  }
 //		  }  else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'(' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'(' esperado, mas encontrei: " + lexema );
 //		  }
 //	  }  else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'ENQUANTO' esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'ENQUANTO' esperado, mas encontrei: " + lexema );
 //	  }
 //  }
 
@@ -757,19 +808,19 @@ public class gauLexico {
 //						  buscaProximoToken();
 //						  acumulaRegra( "<comando_faca> ::= 'FACA' <id> '<-' <expressao> 'ATE' <expressao> '[' <comandos> ']'");
 //					  }  else {
-//						  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
+//						  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\']' esperado, mas encontrei: " + lexema );
 //					  }
 //				  }  else {
-//					  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
+//					  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'[' esperado, mas encontrei: " + lexema );
 //				  }
 //			  }  else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'ATE' esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'ATE' esperado, mas encontrei: " + lexema );
 //			  }
 //		  }  else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'<-' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'<-' esperado, mas encontrei: " + lexema );
 //		  }
 //	  }  else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'FACA' esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'FACA' esperado, mas encontrei: " + lexema );
 //	  }
 //  }
 
@@ -784,13 +835,13 @@ public class gauLexico {
 //				  buscaProximoToken();
 //				  acumulaRegra( "<comando_le> ::= '?' '(' <id> ')'");
 //			  }  else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n')' esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n')' esperado, mas encontrei: " + lexema );
 //			  }
 //		  }  else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n'(' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n'(' esperado, mas encontrei: " + lexema );
 //		  }
 //	  }  else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'!' esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'!' esperado, mas encontrei: " + lexema );
 //	  }
 //  }
 
@@ -802,7 +853,7 @@ public class gauLexico {
 //		expressao();
 //		acumulaRegra( "<comando_atribui>  ::= <lista_ids> '<-' <expressao>");
 //	} else {
-//		registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'<-' esperado, mas encontrei: " + lexema );
+//		registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'<-' esperado, mas encontrei: " + lexema );
 //	}
 //
 //  }
@@ -826,13 +877,13 @@ public class gauLexico {
 //				  buscaProximoToken();
 //				  acumulaRegra( "<comando_escreve> ::= '!' '(' <exp> ')'");
 //			  }  else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n')' esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n')' esperado, mas encontrei: " + lexema );
 //			  }
 //		  }  else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n'(' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n'(' esperado, mas encontrei: " + lexema );
 //		  }
 //	  }  else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'!' esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\'!' esperado, mas encontrei: " + lexema );
 //	  }
 //
 //  }
@@ -856,7 +907,7 @@ public class gauLexico {
 //		   buscaProximoToken();
 //		   expressao();
 //	   } else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nSimbolo de compara��o esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nSimbolo de comparação esperado, mas encontrei: " + lexema );
 //	   }
 //   }
 
@@ -931,11 +982,11 @@ public class gauLexico {
 //		if ( token == T_FECHA_PAR ) {
 //			buscaProximoToken();
 //		} else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n')' esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n')' esperado, mas encontrei: " + lexema );
 //		}
 //		break;
 //	}
-//	default: registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n'id, numero ou (' esperado, mas encontrei: " + lexema );
+//	default: registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n'id, numero ou (' esperado, mas encontrei: " + lexema );
 //	}
 //  }
 
@@ -952,7 +1003,7 @@ public class gauLexico {
 //		  buscaProximoToken();
 //		  acumulaRegra( "<numero> ::= [0-9]+");
 //	  } else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nNumero esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nNumero esperado, mas encontrei: " + lexema );
 //	  }
 //  }
 //
@@ -961,7 +1012,7 @@ public class gauLexico {
 //		  buscaProximoToken();
 //		  acumulaRegra( "<id> ::= [A-Z][A-Z,0-9,_]*");
 //	  } else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nId esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nId esperado, mas encontrei: " + lexema );
 //	  }
 //  }
 //
@@ -986,21 +1037,21 @@ public class gauLexico {
 //						  comandos();
 //						  if ( token == T_FIMFACA ) {
 //							  buscaProximoToken();
-//							  acumulaRegra( "regralh�o do para");
+//							  acumulaRegra( "regralhão do para");
 //						  } else {
-//							  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nfimfaca esperado, mas encontrei: " + lexema );
+//							  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nfimfaca esperado, mas encontrei: " + lexema );
 //						  }
 //					  } else {
-//						  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nfaca esperado, mas encontrei: " + lexema );
+//						  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nfaca esperado, mas encontrei: " + lexema );
 //					  }
 //				  } else {
-//					  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\npulando ou saltando esperado, mas encontrei: " + lexema );
+//					  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\npulando ou saltando esperado, mas encontrei: " + lexema );
 //				  }
 //			  } else {
-//				  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nate esperado, mas encontrei: " + lexema );
+//				  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nate esperado, mas encontrei: " + lexema );
 //			  }
 //		  } else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n= esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n= esperado, mas encontrei: " + lexema );
 //		  }
 //	  }
 //
@@ -1014,7 +1065,7 @@ public class gauLexico {
 //		 	  expressao();
 //			  acumulaRegra( "<id> ::= <expressao>");
 //		  } else {
-//			  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n<- esperado, mas encontrei: " + lexema );
+//			  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\n<- esperado, mas encontrei: " + lexema );
 //		  }
 //	  }
 //  }
@@ -1056,7 +1107,7 @@ public class gauLexico {
 //			  acumulaRegra( "<expressao> ::= <expressao> [+-*/] <expressao>");
 //		  }
 //	  } else {
-//		  registraErroSintatico( "Erro Sint�tico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nNUMERO esperado, mas encontrei: " + lexema );
+//		  registraErroSintatico( "Erro Sintático na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nNUMERO esperado, mas encontrei: " + lexema );
 //	  }
 //  }
 //
@@ -1297,7 +1348,7 @@ public class gauLexico {
             token = T_FIM_FONTE;
         } else {
             token = T_ERRO_LEX;
-            mensagemDeErro = "Erro L�xico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nToken desconhecido: " + lookAhead;
+            mensagemDeErro = "Erro Léxico na linha: " + linhaAtual + "\nReconhecido ao atingir a coluna: " + colunaAtual + "\nLinha do Erro: <" + linhaFonte + ">\nToken desconhecido: " + lookAhead;
             sbLexema.append( lookAhead );
         }
 
@@ -1397,7 +1448,7 @@ public class gauLexico {
     private static boolean abreFonte( File fileName ) {
 
         if( arqFonte == null || fileName.getName().trim().equals( "" ) ) {
-            JOptionPane.showMessageDialog( null, "Nome de Arquivo Inv�lido", "Nome de Arquivo Inv�lido", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( null, "Nome de Arquivo Inválido", "Nome de Arquivo Inválido", JOptionPane.ERROR_MESSAGE );
             return false;
         } else {
             linhaAtual = 1;
@@ -1434,7 +1485,7 @@ public class gauLexico {
     private static boolean gravaSaida( File fileName ) {
 
         if( arqDestino == null || fileName.getName().trim().equals( "" ) ) {
-            JOptionPane.showMessageDialog( null, "Nome de Arquivo Inv�lido", "Nome de Arquivo Inv�lido", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( null, "Nome de Arquivo Inválido", "Nome de Arquivo Inválido", JOptionPane.ERROR_MESSAGE );
             return false;
         } else {
             FileWriter fw;
@@ -1443,12 +1494,12 @@ public class gauLexico {
                 BufferedWriter bfw = new BufferedWriter( fw );
                 bfw.write( tokensIdentificados.toString() );
                 bfw.write( regrasReconhecidas.toString() );
-                bfw.write( "\n\nStatus da Compila��o:\n\n" );
+                bfw.write( "\n\nStatus da Compilação:\n\n" );
                 bfw.write( mensagemDeErro );
                 bfw.close();
                 JOptionPane.showMessageDialog( null, "Arquivo Salvo: " + arqDestino, "Salvando Arquivo", JOptionPane.INFORMATION_MESSAGE );
             } catch (IOException e) {
-                JOptionPane.showMessageDialog( null, e.getMessage(), "Erro de Entrada/Sa�da", JOptionPane.ERROR_MESSAGE );
+                JOptionPane.showMessageDialog( null, e.getMessage(), "Erro de Entrada/Saída", JOptionPane.ERROR_MESSAGE );
             }
             return true;
         }
@@ -1458,13 +1509,13 @@ public class gauLexico {
 
         JTextArea texto = new JTextArea();
         texto.append( tokensIdentificados.toString() );
-        JOptionPane.showMessageDialog(null, texto, "An�lise L�xica", JOptionPane.INFORMATION_MESSAGE );
+        JOptionPane.showMessageDialog(null, texto, "Análise Léxica", JOptionPane.INFORMATION_MESSAGE );
 
         texto.setText( regrasReconhecidas.toString() );
-        texto.append( "\n\nStatus da Compila��o:\n\n" );
+        texto.append( "\n\nStatus da Compilação:\n\n" );
         texto.append( mensagemDeErro );
 
-        JOptionPane.showMessageDialog(null, texto, "Resumo da Compila��o", JOptionPane.INFORMATION_MESSAGE );
+        JOptionPane.showMessageDialog(null, texto, "Resumo da Compilação", JOptionPane.INFORMATION_MESSAGE );
     }
 
     public static void acumulaToken( String tokenIdentificado ) {
@@ -1484,7 +1535,7 @@ public class gauLexico {
 }
 
 /**
- * Classe Interna para cria��o de filtro de sele��o
+ * Classe Interna para criação de filtro de seleção
  */
 class FiltroJozS4 extends FileFilter {
 
@@ -1503,14 +1554,14 @@ class FiltroJozS4 extends FileFilter {
     }
 
     /**
-     * Retorna quais extens�es poder�o ser escolhidas
+     * Retorna quais extensões poderão ser escolhidas
      */
     public String getDescription() {
         return "*.gdr";
     }
 
     /**
-     * Retorna a parte com a extens�o de um arquivo
+     * Retorna a parte com a extensão de um arquivo
      */
     public String getExtensao(File arq) {
         if(arq != null) {
