@@ -478,7 +478,7 @@ class FiltroJoz3 extends FileFilter {
     }
 
     /**
-     * Retorna quais extens�es poder�o ser escolhidas
+     * Retorna quais extensões poderão ser escolhidas
      */
     public String getDescription() {
         return "*.joz";
